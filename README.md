@@ -1,2 +1,2 @@
 # ml
-machine learning class assignments and project
+stand alone machine learning algorithms 
