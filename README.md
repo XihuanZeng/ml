@@ -1,2 +1,2 @@
 # ml
-stand alone machine learning algorithms 
+sample code for stand alone machine learning algorithms

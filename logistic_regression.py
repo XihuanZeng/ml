@@ -1,5 +1,4 @@
-# implement a regularized(L1 or L2) multi-class logistic regression(optimized by stochastic gradient descent) with TensorFlow
-# you can specify the percentage of hold out set from training set for validation purpose
+# implement a regularized(L1 or L2) multi-class logistic regression(optimized by SGD) with TensorFlow
 
 import numpy as np
 import tensorflow as tf
@@ -7,8 +6,15 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from utils import GeneralDataSet
 
 
-class logistic_regression:
+class logistic_regression(object):
     def __init__(self, regulizer = None, beta = 0.5, batchsize = 128, epoch = 10):
+        """
+        :param regulizer: None(Default), 'l1' or 'l2'
+        :param beta: rate of regularization
+        :param batchsize: batch size
+        :param epoch: number of epoch to train
+        :return:
+        """
         self.__batchsize = 128
         self.__regulizer = regulizer
         self.__epoch = epoch
@@ -33,7 +39,7 @@ class logistic_regression:
         model_input = GeneralDataSet(self.__scaler.transform(train_set),
                              np.array(self.__onehot.transform([[i] for i in train_label]).toarray(), dtype = 'float32'))
 
-        # building computation graph
+        # build computation graph
         num_train_samples = train_set.shape[0]
         self.__num_feature = train_set.shape[1]
         self.__num_labels = num_labels
@@ -46,7 +52,7 @@ class logistic_regression:
         if self.__regulizer == 'l1':
             loss = cross_entropy + self.__beta * tf.reduce_sum(W)
         elif self.__regulizer == 'l2':
-            loss = cross_entropy + self.__beta *tf.nn.l2_loss(W)
+            loss = cross_entropy + self.__beta * tf.nn.l2_loss(W)
         else:
             loss = cross_entropy
         optimizer = tf.train.GradientDescentOptimizer(0.01).minimize(loss)
@@ -89,5 +95,3 @@ class logistic_regression:
         predict = sess.run(tf.argmax(y, 1), feed_dict = {x:self.__scaler.transform(test_set)})
         sess.close()
         return predict
-
-
